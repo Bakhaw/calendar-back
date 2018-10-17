@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const InvitationSchema = new mongoose.Schema({
   name: String,
-  dates: Array,
+  dates: String,
   checked: Boolean
 })
 
