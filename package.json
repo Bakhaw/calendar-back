@@ -1,0 +1,19 @@
+{
+  "name": "calendar-back",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon server.js --exec babel-node --presets env"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "nodemon": "^1.18.4"
+  }
+}
