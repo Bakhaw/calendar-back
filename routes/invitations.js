@@ -3,28 +3,28 @@ import Invitation from '../models/Invitation';
 
 const router = Router();
 
-router.get('/invitations', (req, res) => {
+router.get('/', (req, res) => {
   Invitation.find({}, (err, invitations) => {
     return err ? console.log(err) : res.json(invitations);
   });
 });
 
-router.post('/invitations/add', (req, res) => {
+router.post('/add', (req, res) => {
   const newInvitation = new Invitation(req.body);
   newInvitation.save((err, invitation) => {
-    return err ? console.log(err) : res.json(`${invitation.name} added with success!`)
+    return err ? console.log(err) : res.json('Invitation created with success!')
   });
 });
 
-router.post('/invitations/update/:id', (req, res) => {
+router.post('/update/:id', (req, res) => {
   Invitation.findByIdAndUpdate(req.params.id, req.body, (err, invitation) => {
-    return err ? res.send(err) : res.json(`${invitation.name} updated with success!`);
+    return err ? res.send(err) : res.json('Invitation updated with success!');
   });
 });
 
-router.get('/invitations/delete/:id', (req, res) => {
+router.get('/delete/:id', (req, res) => {
   Invitation.findByIdAndRemove(req.params.id, (err, invitation) => {
-    return err ? res.send(err) : res.json(`${invitation.name} updated with success!`);
+    return err ? res.send(err) : res.json('Invitation removed with success!');
   });
 });
 
