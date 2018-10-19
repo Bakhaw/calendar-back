@@ -12,7 +12,7 @@ router.get('/invitations', (req, res) => {
 router.post('/invitations/add', (req, res) => {
   const newInvitation = new Invitation(req.body);
   newInvitation.save((err, invitation) => {
-    return err ? console.log(err) : res.redirect('http://localhost:8080/')
+    return err ? console.log(err) : res.json(`${invitation.name} added with success!`)
   });
 });
 
