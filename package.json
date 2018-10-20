@@ -4,11 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon server.js --exec babel-node --presets env"
+    "start": "nodemon server.js --exec babel-node --presets env",
+    "import": "mongo < scripts/create_events.js",
+    "drop": "mongo < scripts/drop.js"
   },
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.4",
+    "moment": "^2.22.2",
     "mongoose": "^5.3.4"
   },
   "devDependencies": {

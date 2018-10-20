@@ -2,8 +2,9 @@ import mongoose from 'mongoose';
 
 const CalendarCardSchema = new mongoose.Schema({
     title: String,
-    start: Date,
-    end: Date,
+    start: String,
+    end: String,
+    allDay: Boolean,
     invitationId: String
 })
 
