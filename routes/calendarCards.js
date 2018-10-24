@@ -12,32 +12,37 @@ router.get('/', (req, res) => {
   });
 });
 
+// ? GET A SPECIFIC CARD BY ITS ID (CUSTOM EVENT CREATED ON ADMIN INTERFACE)
+router.get('/cardById/:cardId', (req, res) => {
+  CalendarCard.findById(req.params.cardId, (err, card) => {
+    return err ? console.log(err) : res.json([card]);
+  })
+})
+
 // ? GET ALL CARDS REFERENCED BY THE SAME INVITATIONID (PACKAGE OF DATES)
-router.get('/:invitationId', (req, res) => {
+router.get('/cardsByInvitationId/:invitationId', (req, res) => {
   const query = { invitationId: req.params.invitationId };
   CalendarCard.find(query, (err, cards) => {
     if (err) return console.log(err);
-    console.log('Cards trouvées')
+    
+    cards.sort((left, right) => {
+      const leftDate = moment(left.start, 'MM/DD/YYYY');
+      const rightDate = moment(right.start, 'MM/DD/YYYY');
+      const diff = leftDate.diff(rightDate);
+      return diff > 0;
+    });
+
     res.json(cards)
   })
 })
 
 // ? ADD CARD(S)
 router.post('/add', (req, res) => {
-  const startDates = req.body.startDates.split(',');
-  const endDates = req.body.endDates.split(',');
+  // ? Le IF correspond aux cards qui s'ajoute au calendrier quand un user valide un package sur l'interface
+  if (req.body.startDates && req.body.endDates) {
+    const startDates = req.body.startDates.split(',');
+    const endDates = req.body.endDates.split(',');
 
-  // TODO FIX SPLIT ERROR
-  // TODO HANDLE FRENCH LANGUAGE
-
-  // const calendarObj = {
-  //   start: moment(`${d}`, 'DD/MM/YYYY').format('L', 'fr'),
-  //   end: moment(`${endDates[i]}`, 'DD/MM/YYYY').format('L', 'fr'),
-  //   title: req.body.title
-  // }
-
-  try {
-    console.log('HEREEE', req.body);
     startDates.map((d, i) => {
       const newCalendarCard = new CalendarCard({
         start: moment(d, 'MM/DD/YYYY').format('MM/DD/YYYY'),
@@ -47,13 +52,18 @@ router.post('/add', (req, res) => {
         invitationId: req.body.invitationId
       })
 
-      newCalendarCard.populate('invitationId').save();
+      newCalendarCard.save();
     });
-  } catch (err) {
-    console.log(err);
-  }
 
-  res.json('CalendarCard added with success!')
+    res.json('Card created with success');
+  } else {
+    // ? Le ELSE correspond aux cards custom ajoutées depuis l'interface Admin
+    const newCalendarCard = new CalendarCard(req.body);
+
+    newCalendarCard.save((err, card) => {
+      return err ? console.log(err) : res.json('Card created with success !');
+    })
+  }
 });
 
 // ? UPDATE A CARD
@@ -63,9 +73,14 @@ router.post('/update/:id', (req, res) => {
   });
 });
 
+router.get('/delete/:eventId', (req, res) => {
+  CalendarCard.findByIdAndRemove(req.params.eventId, (err, invit) => {
+    return err ? console.log(err) : res.json(invit);
+  })
+})
+
 // ? REMOVE ALL CARDS REFERENCED BY THE SAME INVITATION ID (SAME PACKAGE OF DATES)
-router.get('/delete/:invitationId', (req, res) => {
-  console.log(req.params.invitationId)
+router.get('/delete/cardsByInvitationId/:invitationId', (req, res) => {
   const query = { invitationId: req.params.invitationId }
   CalendarCard.find(query).remove().exec((err, cards) => {
     if (err) return console.log(err);

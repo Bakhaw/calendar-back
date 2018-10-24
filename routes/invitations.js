@@ -84,13 +84,14 @@ router.get('/toggleEventCheckToTrue/:eventId', (req, res) => {
   const options = { upsert: false, 'new': false };
 
   Invitation.findOneAndUpdate(query, update, options, (err, inv) => {
-    if (err) {
-      return res.status(500).send(err);
-    }
-    if (!inv) {
-      return res.status(400).send({ msg: 'Already exist or not found' });
-    }
-    return res.status(200).send({ message: "Thanks :)" });
+    return err ? console.log(err) : res.json(inv)
+    // if (err) {
+    //   return res.status(500).send(err);
+    // }
+    // if (!inv) {
+    //   return res.status(400).send({ msg: 'Already exist or not found' });
+    // }
+    // return res.status(200).send({ message: "Thanks :)" });
   })
 });
 
